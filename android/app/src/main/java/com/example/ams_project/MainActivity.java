@@ -1,4 +1,4 @@
-package com.example.ams_project;
+package com.example.amss_project;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

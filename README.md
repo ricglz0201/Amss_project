@@ -1,4 +1,4 @@
-# ams_project
+# amss_project
 
 A new Flutter project.
 
