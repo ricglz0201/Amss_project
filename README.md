@@ -1,16 +1,9 @@
 # amss_project
 
-A new Flutter project.
+Flutter project done as an AMSS class project. It is an app which function is to book bus travels for the Tec Students. It works an app that needs to sign in with an institutional email, to book a travel.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+1. [Install flutter](https://flutter.dev/docs/get-started/install) **Note: This project was tested with VS code as IDE**
+2. Clone the project ```git clone https://github.com/ricglz0201/Amss_project.git```
+3. Run the project
