@@ -26,12 +26,14 @@ class _RootPageState extends State<RootPage> {
   void initState() {
     super.initState();
     widget.auth.getCurrentUser().then((user) {
+      print(user);
       setState(() {
         if (user != null) {
           _userId = user?.uid;
         }
         authStatus =
             user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
+        print(authStatus);
       });
     });
   }
@@ -44,7 +46,6 @@ class _RootPageState extends State<RootPage> {
     });
     setState(() {
       authStatus = AuthStatus.LOGGED_IN;
-
     });
   }
 
@@ -71,13 +72,13 @@ class _RootPageState extends State<RootPage> {
         return _buildWaitingScreen();
         break;
       case AuthStatus.NOT_LOGGED_IN:
-        return new LoginSignUpPage(
+        return new LoginPage(
           auth: widget.auth,
           onSignedIn: _onLoggedIn,
         );
         break;
       case AuthStatus.LOGGED_IN:
-        if (_userId.length > 0 && _userId != null) {
+        if (_userId != null && _userId.length > 0) {
           return new HomePage(
             userId: _userId,
             auth: widget.auth,

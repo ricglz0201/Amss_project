@@ -36,9 +36,13 @@ class _HomePageState extends State<HomePage> {
           title: new Text('Home page'),
           actions: <Widget>[
             new FlatButton(
-                child: new Text('Logout',
-                    style: new TextStyle(fontSize: 17.0, color: Colors.white)),
-                onPressed: _signOut)
+                child: 
+                new Text(
+                  'Logout',
+                  style: new TextStyle(fontSize: 17.0, color: Colors.white)
+                ),
+                onPressed: _signOut
+            )
           ],
         ),
         body: Text('hello world')

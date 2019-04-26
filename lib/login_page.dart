@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:amss_project/auth.dart';
 
-class LoginSignUpPage extends StatefulWidget {
-  LoginSignUpPage({this.auth, this.onSignedIn});
+class LoginPage extends StatefulWidget {
+  LoginPage({this.auth, this.onSignedIn});
 
   final BaseAuth auth;
   final VoidCallback onSignedIn;
 
   @override
-  State<StatefulWidget> createState() => new _LoginSignUpPageState();
+  State<StatefulWidget> createState() => new _LoginPageState();
 }
 
-class _LoginSignUpPageState extends State<LoginSignUpPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -47,6 +47,7 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       String userId = "";
       try {
         userId = await widget.auth.signIn(_email, _password);
+        super.widget.onSignedIn();
         print('Signed in: $userId');
         setState(() {
           _isLoading = false;
@@ -64,7 +65,6 @@ class _LoginSignUpPageState extends State<LoginSignUpPage> {
       }
     }
   }
-
 
   @override
   void initState() {
