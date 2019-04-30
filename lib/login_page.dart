@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String _mailValidator(value) {
     if(value.isEmpty) return 'Mail can\'t be empty';
-    RegExp exp = new RegExp(r"[al][0-9]{8}@(itesm|tec).mx");
+    RegExp exp = new RegExp(r"[aAlL][0-9]{8}@(itesm|tec).mx");
     return exp.hasMatch(value) ? null : 'The format isn\'t correct';
   }
 
