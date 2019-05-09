@@ -97,20 +97,21 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _showBody(){
     return new Container(
-        padding: EdgeInsets.all(16.0),
-        child: new Form(
-          key: _formKey,
-          child: new ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              _showLogo(),
-              _showEmailInput(),
-              _showPasswordInput(),
-              _showPrimaryButton(),
-              _showErrorMessage()
-            ],
-          ),
-        ));
+      padding: EdgeInsets.all(16.0),
+      child: new Form(
+        key: _formKey,
+        child: new ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            _showLogo(),
+            _showEmailInput(),
+            _showPasswordInput(),
+            _showPrimaryButton(),
+            _showErrorMessage()
+          ],
+        ),
+      )
+    );
   }
 
   Widget _showErrorMessage() {

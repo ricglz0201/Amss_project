@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:amss_project/extra/auth.dart';
+import 'package:amss_project/models/user.dart';
 import 'package:amss_project/pages/profile_page.dart';
 import 'package:amss_project/pages/reservation_page.dart';
 import 'package:amss_project/pages/routes_page.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.auth, this.userId, this.onSignedOut})
+  HomePage({Key key, this.auth, this.user, this.onSignedOut})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  final String userId;
+  final User user;
 
   @override
   State<StatefulWidget> createState() => new _HomePageState();
@@ -30,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _children = [
-      new ProfilePage(widget.userId),
+      new ProfilePage(widget.user),
       new RoutesPage(),
       new ReservationPage()
     ];

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amss_project/extra/auth.dart';
+import 'package:amss_project/models/user.dart';
 import 'package:amss_project/pages/home_page.dart';
 import 'package:amss_project/pages/login_page.dart';
 
@@ -20,16 +21,14 @@ enum AuthStatus {
 
 class _RootPageState extends State<RootPage> {
   AuthStatus authStatus = AuthStatus.NOT_DETERMINED;
-  String _userId = "";
+  User _user;
 
   @override
   void initState() {
     super.initState();
     widget.auth.getCurrentUser().then((user) {
       setState(() {
-        if (user != null) {
-          _userId = user?.uid;
-        }
+        if (user != null) _user = User(uuid: user?.uid, mail: user?.email);
         authStatus =
             user?.uid == null ? AuthStatus.NOT_LOGGED_IN : AuthStatus.LOGGED_IN;
       });
@@ -39,18 +38,16 @@ class _RootPageState extends State<RootPage> {
   void _onLoggedIn() {
     widget.auth.getCurrentUser().then((user){
       setState(() {
-        _userId = user.uid.toString();
+        _user = User(uuid: user?.uid, mail: user?.email);
+        authStatus = AuthStatus.LOGGED_IN;
       });
-    });
-    setState(() {
-      authStatus = AuthStatus.LOGGED_IN;
     });
   }
 
   void _onSignedOut() {
     setState(() {
       authStatus = AuthStatus.NOT_LOGGED_IN;
-      _userId = "";
+      _user = null;
     });
   }
 
@@ -76,9 +73,9 @@ class _RootPageState extends State<RootPage> {
         );
         break;
       case AuthStatus.LOGGED_IN:
-        if (_userId != null && _userId.length > 0) {
+        if (_user != null && _user.uuid.length > 0) {
           return new HomePage(
-            userId: _userId,
+            user: _user,
             auth: widget.auth,
             onSignedOut: _onSignedOut,
           );
