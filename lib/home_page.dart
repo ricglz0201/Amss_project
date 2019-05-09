@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amss_project/auth.dart';
-import 'package:amss_project/bus_page.dart';
+import 'package:amss_project/routes_page.dart';
 import 'package:amss_project/profile_page.dart';
 import 'package:amss_project/reservation_page.dart';
 
@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     _children = [
       new ProfilePage(widget.userId),
-      new BusPage(),
+      new RoutesPage(),
       new ReservationPage()
     ];
   }
