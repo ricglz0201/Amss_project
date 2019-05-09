@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:amss_project/root_page.dart';
-import 'package:amss_project/auth.dart';
+import 'package:amss_project/pages/root_page.dart';
+import 'package:amss_project/extra/auth.dart';
 
 void main() => runApp(MyApp());
 

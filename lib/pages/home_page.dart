@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:amss_project/auth.dart';
-import 'package:amss_project/routes_page.dart';
-import 'package:amss_project/profile_page.dart';
-import 'package:amss_project/reservation_page.dart';
+import 'package:amss_project/extra/auth.dart';
+import 'package:amss_project/pages/profile_page.dart';
+import 'package:amss_project/pages/reservation_page.dart';
+import 'package:amss_project/pages/routes_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.onSignedOut})

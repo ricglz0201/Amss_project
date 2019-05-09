@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:amss_project/route.dart';
-import 'package:amss_project/bus.dart';
-import 'package:amss_project/stop.dart';
+import 'package:amss_project/models/route.dart';
+import 'package:amss_project/models/bus.dart';
+import 'package:amss_project/models/stop.dart';
 
 class RoutesPage extends StatelessWidget {
   RoutesPage();

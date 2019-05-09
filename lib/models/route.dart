@@ -1,5 +1,5 @@
-import 'package:amss_project/bus.dart';
-import 'package:amss_project/stop.dart';
+import 'package:amss_project/models/bus.dart';
+import 'package:amss_project/models/stop.dart';
 
 class RouteModel {
   String name;
