@@ -85,7 +85,8 @@ class _LoginPageState extends State<LoginPage> {
             _showBody(),
             _showCircularProgress(),
           ],
-        ));
+        )
+    );
   }
 
   Widget _showCircularProgress(){
@@ -100,8 +101,7 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.all(16.0),
       child: new Form(
         key: _formKey,
-        child: new ListView(
-          shrinkWrap: true,
+        child: new Column(
           children: <Widget>[
             _showLogo(),
             _showEmailInput(),
