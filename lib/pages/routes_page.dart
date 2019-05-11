@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 import 'package:amss_project/models/route.dart';
-import 'package:amss_project/models/bus.dart';
-import 'package:amss_project/models/stop.dart';
 
-class RoutesPage extends StatelessWidget {
-  RoutesPage();
-  final List<RouteModel> routes = getRoutes();
+class RoutesPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => new _RoutesPageState();
+}
+
+class _RoutesPageState extends State<RoutesPage> {
+  List<RouteModel> routes = [];
+  bool _isLoading;
+
+  @override
+  void initState() {
+    _isLoading = true;
+    super.initState();
+    getRoutes();
+  }
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        _showBody(),
+        _showCircularProgress()
+      ],
+    );
+  }
+
+  Widget _showBody() {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -17,6 +38,12 @@ class RoutesPage extends StatelessWidget {
         return makeCard(routes[index]);
       },
     );
+  }
+
+  Widget _showCircularProgress(){
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    } return Container(height: 0.0, width: 0.0,);
   }
 
   Card makeCard(RouteModel route) => Card(
@@ -45,35 +72,13 @@ class RoutesPage extends StatelessWidget {
       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     )
   );
-}
 
-List<RouteModel> getRoutes() {
-  return [
-    RouteModel(name: 'Morones Prieto',
-               buses: getBuses(),
-               stops: getStops()),
-    RouteModel(name: 'Garza Sada',
-               buses: getBuses(),
-               stops: getStops()),
-    RouteModel(name: 'Valle Alto',
-               buses: getBuses(),
-               stops: getStops()),
-    RouteModel(name: 'EGADE',
-               buses: getBuses(),
-               stops: getStops())
-  ];
-}
-
-List<Bus> getBuses() {
-  return [
-    Bus(bicyclesSlotsAvailable: 1, seatsAvailable: 10)
-  ];
-}
-
-List<Stop> getStops() {
-  return [
-    Stop(name: '1', address: 'somewhere'),
-    Stop(name: '1', address: 'somewhere'),
-    Stop(name: '1', address: 'somewhere'),
-  ];
+  Future<void> getRoutes() async {
+    http.Response response =
+      await http.get('http://10.23.9.237:80/routes');
+    setState(() {
+      routes = RouteModel.allFromResponse(response.body);
+      _isLoading = false;
+    });
+  }
 }
