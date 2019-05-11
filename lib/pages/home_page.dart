@@ -65,15 +65,15 @@ class _HomePageState extends State<HomePage> {
         items: [
           BottomNavigationBarItem(
             icon: new Icon(Icons.person),
-            title: new Text('Profile'),
+            title: new Text('Perfil'),
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.directions_bus),
-            title: new Text('Available buses'),
+            title: new Text('Rutas'),
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.book),
-            title: new Text('Book'),
+            title: new Text('Reservar'),
           )
         ],
       ),

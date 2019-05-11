@@ -23,7 +23,7 @@ class RoutesPage extends StatelessWidget {
     elevation: 8.0,
     margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
     child: Container(
-      decoration: BoxDecoration(color: Color(0xFF1176E3)),
+      decoration: BoxDecoration(color: Color(0xFF1976D2)),
       child: makeListTile(route),
     ),
   );

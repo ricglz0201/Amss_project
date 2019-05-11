@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:amss_project/extra/auth.dart';
+import 'package:amss_project/widgets/submit_button.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -101,12 +102,16 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.all(16.0),
       child: new Form(
         key: _formKey,
-        child: new Column(
+        child: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             _showLogo(),
             _showEmailInput(),
             _showPasswordInput(),
-            _showPrimaryButton(),
+            new SubmitButton(
+              label: 'Iniciar sesión',
+              function: _validateAndSubmit,
+            ),
             _showErrorMessage()
           ],
         ),
@@ -181,23 +186,5 @@ class _LoginPageState extends State<LoginPage> {
         onSaved: (value) => _password = value,
       ),
     );
-  }
-
-  Widget _showPrimaryButton() {
-    return new Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
-        child: SizedBox(
-          height: 40.0,
-          child: new RaisedButton(
-            elevation: 5.0,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-            color: Colors.blue,
-            child:new Text(
-              'Login',
-              style: new TextStyle(fontSize: 20.0, color: Colors.white)
-            ),
-            onPressed: _validateAndSubmit,
-          ),
-        ));
   }
 }

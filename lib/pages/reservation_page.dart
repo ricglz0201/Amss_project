@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:amss_project/models/user.dart';
-import 'package:amss_project/extra/dropdown_widget.dart';
+import 'package:amss_project/widgets/dropdown_widget.dart';
+import 'package:amss_project/widgets/submit_button.dart';
 
 class ReservationPage extends StatefulWidget {
   final User user;
@@ -33,6 +34,7 @@ class _ReservationPageState extends State<ReservationPage> {
       key: _formkey,
       autovalidate: true,
       child: new ListView(
+        shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         children: <Widget>[
           _showDatePicker(),
@@ -47,23 +49,26 @@ class _ReservationPageState extends State<ReservationPage> {
             id: _seatId,
             list: busesAndSeats,
             label: 'Autobus - Asiento',
-            icon: Icon(Icons.directions_bus),
+            icon: Icon(Icons.event_seat),
             updateState: updateSeat
           ),
           new DropdownWidget(
             id: _stopId,
             list: stops,
             label: 'Parada',
-            icon: Icon(Icons.stop),
+            icon: Icon(Icons.directions_bus),
             updateState: updateStop
           ),
+          new SubmitButton(
+            label: 'Reservar',
+            function: _validateAndSubmit,
+          )
         ],
       ),
     );
   }
 
   void updateRoute(int newId, FormFieldState<int> state) {
-    print(newId);
     setState(() {
       _routeId = newId;
       state.didChange(newId);
@@ -71,7 +76,6 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   void updateSeat(int newId, FormFieldState<int> state) {
-    print(newId);
     setState(() {
       _seatId = newId;
       state.didChange(newId);
@@ -79,12 +83,13 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   void updateStop(int newId, FormFieldState<int> state) {
-    print(newId);
     setState(() {
       _stopId = newId;
       state.didChange(newId);
     });
   }
+
+  void _validateAndSubmit() async {}
 
    Future _chooseDate(BuildContext context, String initialDateString) async {
     DateTime now = new DateTime.now();
