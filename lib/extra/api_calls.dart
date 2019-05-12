@@ -6,7 +6,7 @@ import 'package:amss_project/models/bus.dart';
 import 'package:amss_project/models/route.dart';
 import 'package:amss_project/models/stop.dart';
 
-String url = 'http://10.23.9.237:80';
+String url = 'https://amss-api.herokuapp.com/routes';
 
 void getRoutes(void Function(List<RouteModel>) doneFunction) async {
   Response response = await get('$url/routes');
