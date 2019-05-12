@@ -1,6 +1,5 @@
+import 'package:amss_project/extra/api_calls.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
 import 'package:amss_project/models/route.dart';
 
 class RoutesPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class _RoutesPageState extends State<RoutesPage> {
   void initState() {
     _isLoading = true;
     super.initState();
-    getRoutes();
+    getRoutes(updateRoutes);
   }
 
   @override
@@ -38,6 +37,13 @@ class _RoutesPageState extends State<RoutesPage> {
         return makeCard(routes[index]);
       },
     );
+  }
+
+  void updateRoutes(List<RouteModel> response) {
+    setState(() {
+      routes = response;
+      _isLoading = false;
+    });
   }
 
   Widget _showCircularProgress(){
@@ -72,13 +78,4 @@ class _RoutesPageState extends State<RoutesPage> {
       style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
     )
   );
-
-  Future<void> getRoutes() async {
-    http.Response response =
-      await http.get('http://10.23.9.237:80/routes');
-    setState(() {
-      routes = RouteModel.allFromResponse(response.body);
-      _isLoading = false;
-    });
-  }
 }

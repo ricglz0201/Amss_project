@@ -19,9 +19,13 @@ class RouteModel {
   }
 
   static RouteModel fromMap(Map map) {
+    List<Bus> buses = map.containsKey('buses') ? Bus.allFromResponse(map['buses']) : [];
+    List<Stop> stops = map.containsKey('stops') ? Stop.allFromResponse(map['stops']) : [];
     return new RouteModel(
       name: map['name'],
-      id: map['id']
+      id: map['id'],
+      buses: buses,
+      stops: stops
     );
   }
 }

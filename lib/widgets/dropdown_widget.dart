@@ -10,16 +10,11 @@ class DropdownWidget extends StatefulWidget {
   DropdownWidget({this.id, this.list, this.updateState, this.label, this.icon});
   
   @override
-  State<StatefulWidget> createState() => 
-    new _DropdownWidgetState(id: id, list: list);
+  State<DropdownWidget> createState() => 
+    _DropdownWidgetState();
 }
 
 class _DropdownWidgetState extends State<DropdownWidget> {
-  int id;
-  List<DropdownMenuItem<int>> list;
-
-  _DropdownWidgetState({this.id, this.list});
-
   @override
   Widget build(BuildContext context) {
     return new FormField<int>(
@@ -29,13 +24,12 @@ class _DropdownWidgetState extends State<DropdownWidget> {
             icon: widget.icon,
             labelText: widget.label,
           ),
-          isEmpty: id == -1,
           child: new DropdownButtonHideUnderline(
             child: new DropdownButton<int>(
-              value: id,
+              value: widget.id,
               isDense: true,
               onChanged: (int newValue) => widget.updateState(newValue, state),
-              items: list,
+              items: widget.list,
             ),
           ),
         );
