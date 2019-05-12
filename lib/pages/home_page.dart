@@ -1,3 +1,4 @@
+import 'package:amss_project/pages/reservations_page.dart';
 import 'package:flutter/material.dart';
 import 'package:amss_project/extra/auth.dart';
 import 'package:amss_project/models/user.dart';
@@ -21,19 +22,14 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   List<Widget> _children;
 
-  void onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     _children = [
       new ProfilePage(widget.user),
       new RoutesPage(),
-      new ReservationPage()
+      new ReservationPage(widget.user.uuid),
+      new ReservationsPage(widget.user.uuid),
     ];
   }
 
@@ -49,34 +45,49 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('El borrego volador'),
-        actions: <Widget>[
-          new FlatButton(
-              child: new Icon(Icons.exit_to_app, color: Colors.white70),
-              onPressed: _signOut
-          )
-        ],
-      ),
+      appBar: _showAppBar(),
       body: _children[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: onTap,
-        items: [
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.person),
-            title: new Text('Perfil'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.directions_bus),
-            title: new Text('Rutas'),
-          ),
-          BottomNavigationBarItem(
-            icon: new Icon(Icons.book),
-            title: new Text('Reservar'),
-          )
-        ],
+        type: BottomNavigationBarType.fixed,
+        items: _showBarItems(),
       ),
     );
+  }
+
+  Widget _showAppBar() => AppBar(
+    title: new Text('El borrego volador'),
+    actions: <Widget>[
+      new FlatButton(
+        child: new Icon(Icons.exit_to_app, color: Colors.white70),
+        onPressed: _signOut
+      )
+    ],
+  );
+
+  List<BottomNavigationBarItem> _showBarItems() => [
+    new BottomNavigationBarItem(
+      icon: new Icon(Icons.person),
+      title: new Text('Perfil', style: TextStyle(fontSize: 11)),
+    ),
+    new BottomNavigationBarItem(
+      icon: new Icon(Icons.directions_bus),
+      title: new Text('Rutas', style: TextStyle(fontSize: 11)),
+    ),
+    new BottomNavigationBarItem(
+      icon: new Icon(Icons.assignment),
+      title: new Text('Reservar', style: TextStyle(fontSize: 11)),
+    ),
+    new BottomNavigationBarItem(
+      icon: new Icon(Icons.book),
+      title: new Text('Reservaciones', style: TextStyle(fontSize: 11)),
+    )
+  ];
+
+  void onTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }

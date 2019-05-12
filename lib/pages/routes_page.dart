@@ -1,4 +1,6 @@
 import 'package:amss_project/extra/api_calls.dart';
+import 'package:amss_project/widgets/custom_card.dart';
+import 'package:amss_project/widgets/stack_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:amss_project/models/route.dart';
 
@@ -9,34 +11,12 @@ class RoutesPage extends StatefulWidget {
 
 class _RoutesPageState extends State<RoutesPage> {
   List<RouteModel> routes = [];
-  bool _isLoading;
+  bool _isLoading = true;
 
   @override
   void initState() {
-    _isLoading = true;
     super.initState();
     getRoutes(updateRoutes);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        _showBody(),
-        _showCircularProgress()
-      ],
-    );
-  }
-
-  Widget _showBody() {
-    return ListView.builder(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: routes.length,
-      itemBuilder: (BuildContext context, int index) {
-        return makeCard(routes[index]);
-      },
-    );
   }
 
   void updateRoutes(List<RouteModel> response) {
@@ -46,36 +26,22 @@ class _RoutesPageState extends State<RoutesPage> {
     });
   }
 
-  Widget _showCircularProgress(){
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    } return Container(height: 0.0, width: 0.0,);
-  }
-
-  Card makeCard(RouteModel route) => Card(
-    elevation: 8.0,
-    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-    child: Container(
-      decoration: BoxDecoration(color: Color(0xFF1976D2)),
-      child: makeListTile(route),
-    ),
-  );
-
-  ListTile makeListTile(RouteModel route) => ListTile(
-    contentPadding:
-        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-    leading: Container(
-      padding: EdgeInsets.only(right: 12.0),
-      decoration: new BoxDecoration(
-        border: new Border(
-          right: new BorderSide(width: 1.0, color: Colors.white24)
-        )
+  @override
+  Widget build(BuildContext context) {
+    return StackWidget(
+      body: ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: routes.length,
+        itemBuilder: (BuildContext context, int index) {
+          return new CustomCard(
+            label: 'Ruta: ${routes[index].name}',
+            color: Color(0xFF1976D2),
+            icon: Icon(Icons.map, color: Colors.white),
+          );
+        },
       ),
-      child: Icon(Icons.map, color: Colors.white),
-    ),
-    title: Text(
-      'Ruta: ' + route.name,
-      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-    )
-  );
+      condition: _isLoading,
+    );
+  }
 }

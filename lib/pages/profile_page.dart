@@ -10,14 +10,17 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Container(
       padding: EdgeInsets.all(16.0),
-      child: new Center(
-        child: new Column(
-          children: <Widget>[
-            _showLogo(),
-            Text(user.mail, style: TextStyle(fontSize: 16)),
-            _showBody()
-          ],
-        )
+      child: new ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          _showLogo(),
+          Text(
+            user.mail,
+            style: TextStyle(fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+          _showBody()
+        ],
       )
     );
   }
@@ -38,17 +41,18 @@ class ProfilePage extends StatelessWidget {
 
   Widget _showBody() {
     return new Container(
-      padding: EdgeInsets.fromLTRB(0.0, 30.0, .0, .0),
+      padding: EdgeInsets.fromLTRB(0.0, 15.0, .0, .0),
       child: new Column(
         children: <Widget>[
           Text(
             'Pases',
             style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)
           ),
+          Padding(padding: EdgeInsets.fromLTRB(.0, .0, .0, 5)),
           new Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _showTickets(),
-          )
+          ),
         ],
       ),
     );

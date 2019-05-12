@@ -7,13 +7,13 @@ import 'package:amss_project/models/bus.dart';
 import 'package:amss_project/models/route.dart';
 import 'package:amss_project/models/seat.dart';
 import 'package:amss_project/models/stop.dart';
-import 'package:amss_project/models/user.dart';
 import 'package:amss_project/widgets/dropdown_widget.dart';
+import 'package:amss_project/widgets/stack_widget.dart';
 import 'package:amss_project/widgets/submit_button.dart';
 
 class ReservationPage extends StatefulWidget {
-  final User user;
-  ReservationPage({this.user});
+  final String uuid;
+  ReservationPage(this.uuid);
 
   @override
   State<StatefulWidget> createState() => new _ReservationPageState();
@@ -24,7 +24,7 @@ class _ReservationPageState extends State<ReservationPage> {
   final TextEditingController _controller = new TextEditingController();
   final Container emptyContainer = new Container(height: 0.0, width: 0.0);
   
-  String _errorMessage;
+  String _errorMessage = "";
   bool _isLoading = false, _isIos;
   BuildContext _context;
   int _stopId = 0, _seatId = 0, _routeId = 0;
@@ -36,15 +36,27 @@ class _ReservationPageState extends State<ReservationPage> {
     getRoutes(updateRoutes);
   }
 
+  bool anyDropdownEmpty() {
+    return routes.isEmpty || busesAndSeats.isEmpty || stops.isEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     _context = context;
-    return Stack(
-      children: <Widget>[
-        _showForm(),
-        _showCircularProgress(),
-      ],
+    List<Widget> children = routes.isEmpty ? 
+      [emptyContainer] : _showBody();
+    return StackWidget(
+      body: Form(
+        key: _formKey,
+        autovalidate: true,
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          children: children,
+        ),
+      ),
+      condition: anyDropdownEmpty() || _isLoading
     );
   }
 
@@ -68,7 +80,7 @@ class _ReservationPageState extends State<ReservationPage> {
       int type;
       String title, subtitle;
       try {
-        Map response = await postReservation(params);
+        Map response = await postReservation(params, widget.uuid);
         if (response.containsKey('success')) {
           type = RichAlertType.SUCCESS;
           title = 'Éxito';
@@ -88,47 +100,27 @@ class _ReservationPageState extends State<ReservationPage> {
       setState(() {
         _isLoading = false;
       });
-      showDialog(
-        context: _context,
-        builder: (BuildContext context) {
-          return RichAlertDialog(
-            alertTitle: richTitle(title),
-            alertSubtitle: richSubtitle(subtitle),
-            alertType: type,
-            actions: <Widget>[
-              FlatButton(
-                child: Text("OK"),
-                onPressed: (){Navigator.pop(context);},
-              ),
-            ],
-          );
-        }
-      );
+      _showPopup(title, subtitle, type);
     }
   }
 
-  Widget _showForm() {
-    List<Widget> children = routes.isEmpty ? 
-      [emptyContainer] : _showBody();
-    return new Form(
-      key: _formKey,
-      autovalidate: true,
-      child: new ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        children: children,
-      ),
+  void _showPopup(String title, String subtitle, int type) {
+    showDialog(
+      context: _context,
+      builder: (BuildContext context) {
+        return RichAlertDialog(
+          alertTitle: richTitle(title),
+          alertSubtitle: richSubtitle(subtitle),
+          alertType: type,
+          actions: <Widget>[
+            FlatButton(
+              child: Text("OK"),
+              onPressed: (){Navigator.pop(context);},
+            ),
+          ],
+        );
+      }
     );
-  }
-
-  Widget _showCircularProgress(){
-    if (anyDropdownEmpty() || _isLoading) {
-      return Center(child: CircularProgressIndicator());
-    } return emptyContainer;
-  }
-
-  bool anyDropdownEmpty() {
-    return routes.isEmpty || busesAndSeats.isEmpty || stops.isEmpty;
   }
 
   List<Widget> _showBody() {
@@ -168,7 +160,7 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   Widget _showErrorMessage() {
-    if (_errorMessage != null && _errorMessage.length > 0) {
+    if (_errorMessage.length > 0) {
       return new Text(
         _errorMessage,
         style: TextStyle(
@@ -212,7 +204,7 @@ class _ReservationPageState extends State<ReservationPage> {
     var result = await showDatePicker(
       context: context,
       initialDate: now,
-      firstDate: new DateTime(1900),
+      firstDate: now,
       lastDate: new DateTime(now.year+1)
     );
     if (result == null) return;
@@ -229,29 +221,27 @@ class _ReservationPageState extends State<ReservationPage> {
     }    
   }
 
-  Widget _showDatePicker() {
-    return new Row(
-      children: <Widget>[
-        new Expanded(
-          child: new TextFormField(
-            decoration: new InputDecoration(
-              icon: const Icon(Icons.calendar_today),
-              labelText: 'Fecha',
-            ),
-            controller: _controller,
-            keyboardType: TextInputType.datetime,
-          )
-        ),
-        new IconButton(
-          icon: const Icon(Icons.more_horiz),
-          tooltip: 'Choose date',
-          onPressed: (() {
-            _chooseDate(context, _controller.text);
-          }),
+  Widget _showDatePicker() => new Row(
+    children: <Widget>[
+      new Expanded(
+        child: new TextFormField(
+          decoration: new InputDecoration(
+            icon: const Icon(Icons.calendar_today),
+            labelText: 'Fecha',
+          ),
+          controller: _controller,
+          keyboardType: TextInputType.datetime,
         )
-      ]
-    );
-  }
+      ),
+      new IconButton(
+        icon: const Icon(Icons.more_horiz),
+        tooltip: 'Choose date',
+        onPressed: (() {
+          _chooseDate(context, _controller.text);
+        }),
+      )
+    ]
+  );
 
   void updateRoutes(List<RouteModel> response) {
     List<DropdownMenuItem> newRoutes = response.map((RouteModel route) {

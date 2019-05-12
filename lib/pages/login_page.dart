@@ -1,3 +1,4 @@
+import 'package:amss_project/widgets/stack_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:amss_project/extra/auth.dart';
 import 'package:amss_project/widgets/submit_button.dart';
@@ -15,82 +16,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = new GlobalKey<FormState>();
 
-  String _email;
-  String _password;
-  String _errorMessage;
-
-  bool _isIos;
-  bool _isLoading;
-
-  // Check if form is valid before perform login or signup
-  bool _validateAndSave() {
-    final form = _formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
-  String _mailValidator(value) {
-    if(value.isEmpty) return 'Mail can\'t be empty';
-    RegExp exp = new RegExp(r"[aAlL][0-9]{8}@(itesm|tec).mx");
-    return exp.hasMatch(value) ? null : 'The format isn\'t correct';
-  }
-
-  // Perform login or signup
-  void _validateAndSubmit() async {
-    setState(() {
-      _errorMessage = "";
-      _isLoading = true;
-    });
-    if (_validateAndSave()) {
-      String userId = "";
-      try {
-        userId = await widget.auth.signIn(_email, _password);
-        super.widget.onSignedIn();
-        print('Signed in: $userId');
-        setState(() {
-          _isLoading = false;
-        });
-
-      } catch (e) {
-        print('Error: $e');
-        setState(() {
-          _isLoading = false;
-          _errorMessage = _isIos ? e.details : e.message;
-        });
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    _errorMessage = "";
-    _isLoading = false;
-    super.initState();
-  }
+  String _email, _password, _errorMessage = "";
+  bool _isIos, _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return new Scaffold(
-        appBar: new AppBar(
-          title: new Text('Login'),
-        ),
-        body: Stack(
-          children: <Widget>[
-            _showBody(),
-            _showCircularProgress(),
-          ],
-        )
+      appBar: new AppBar( title: new Text('Iniciar sesión')),
+      body: StackWidget(condition: _isLoading, body: _showBody())
     );
-  }
-
-  Widget _showCircularProgress(){
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    } return Container(height: 0.0, width: 0.0,);
   }
 
   Widget _showBody(){
@@ -115,31 +50,57 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _validateAndSubmit() async {
+    setState(() {
+      _errorMessage = "";
+      _isLoading = true;
+    });
+    if (_validateAndSave()) {
+      String userId = "";
+      try {
+        userId = await widget.auth.signIn(_email, _password);
+        super.widget.onSignedIn();
+        print('Signed in: $userId');
+      } catch (e) {
+        print('Error: $e');
+        setState(() { _errorMessage = _isIos ? e.details : e.message; });
+      }
+    }
+    setState(() { _isLoading = false; });
+  }
+
+  bool _validateAndSave() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
   Widget _showErrorMessage() {
-    if (_errorMessage.length > 0 && _errorMessage != null) {
+    if (_errorMessage.length > 0) {
       return new Text(
         _errorMessage,
         style: TextStyle(
-            fontSize: 13.0,
-            color: Colors.red,
-            height: 1.0,
-            fontWeight: FontWeight.w300),
+          fontSize: 13.0,
+          color: Colors.red,
+          height: 1.0,
+          fontWeight: FontWeight.w300
+        ),
+        textAlign: TextAlign.center,
       );
-    } else {
-      return new Container(
-        height: 0.0,
-      );
-    }
+    } return new Container(height: 0.0);
   }
 
   Widget _showLogo() {
     return new Hero(
       tag: 'hero',
       child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+        padding: EdgeInsets.fromLTRB(0.0, 35.0, 0, 35.0),
         child: CircleAvatar(
           backgroundColor: Colors.transparent,
-          radius: 48.0,
+          radius: 50.0,
           child: Image.asset('assets/tec_logo.jpg'),
         ),
       ),
@@ -147,22 +108,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _showEmailInput() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
-      child: new TextFormField(
-        maxLines: 1,
-        keyboardType: TextInputType.emailAddress,
-        autofocus: false,
-        decoration: new InputDecoration(
-            hintText: 'Email',
-            icon: new Icon(
-              Icons.mail,
-              color: Colors.grey,
-            )),
-        validator: _mailValidator,
-        onSaved: (value) => _email = value,
+    return new TextFormField(
+      maxLines: 1,
+      keyboardType: TextInputType.emailAddress,
+      autofocus: false,
+      decoration: new InputDecoration(
+        hintText: 'Email',
+        icon: new Icon(Icons.mail, color: Colors.grey)
       ),
+      validator: _mailValidator,
+      onSaved: (value) => _email = value,
     );
+  }
+
+  String _mailValidator(value) {
+    if(value.isEmpty) return 'Mail can\'t be empty';
+    RegExp exp = new RegExp(r"[aAlL][0-9]{8}@(itesm|tec).mx");
+    return exp.hasMatch(value) ? null : 'The format isn\'t correct';
   }
 
   Widget _showPasswordInput() {
