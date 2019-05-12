@@ -1,11 +1,12 @@
-import 'package:amss_project/models/bus.dart';
-import 'package:amss_project/models/seat.dart';
-import 'package:amss_project/models/stop.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:rich_alert/rich_alert.dart';
 import 'package:amss_project/extra/api_calls.dart';
+import 'package:amss_project/models/bus.dart';
 import 'package:amss_project/models/route.dart';
+import 'package:amss_project/models/seat.dart';
+import 'package:amss_project/models/stop.dart';
 import 'package:amss_project/models/user.dart';
 import 'package:amss_project/widgets/dropdown_widget.dart';
 import 'package:amss_project/widgets/submit_button.dart';
@@ -19,10 +20,13 @@ class ReservationPage extends StatefulWidget {
 }
 
 class _ReservationPageState extends State<ReservationPage> {
-  final _formkey = new GlobalKey<FormState>();
+  final _formKey = new GlobalKey<FormState>();
   final TextEditingController _controller = new TextEditingController();
   final Container emptyContainer = new Container(height: 0.0, width: 0.0);
   
+  String _errorMessage;
+  bool _isLoading = false, _isIos;
+  BuildContext _context;
   int _stopId = 0, _seatId = 0, _routeId = 0;
   List<DropdownMenuItem<int>> routes = [], busesAndSeats = [], stops = [];
 
@@ -34,6 +38,8 @@ class _ReservationPageState extends State<ReservationPage> {
 
   @override
   Widget build(BuildContext context) {
+    _isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    _context = context;
     return Stack(
       children: <Widget>[
         _showForm(),
@@ -42,11 +48,70 @@ class _ReservationPageState extends State<ReservationPage> {
     );
   }
 
+  bool _validateAndSave() {
+    final currentState = _formKey.currentState;
+    if (currentState.validate()) {
+      currentState.save();
+      return true;
+    }
+    return false;
+  }
+
+  void _validateAndSubmit() async {
+    if (_validateAndSave()) {
+      Map<String, String> params = {
+        'date': _controller.text,
+        'user_id': '1',
+        'stop_id': _stopId.toString(),
+        'seat_id': _seatId.toString()
+      };
+      int type;
+      String title, subtitle;
+      try {
+        Map response = await postReservation(params);
+        if (response.containsKey('success')) {
+          type = RichAlertType.SUCCESS;
+          title = 'Éxito';
+          subtitle = 'Se realizó la reserva';
+        } else {
+          print('Error: ${response['error']}');
+          type = RichAlertType.ERROR;
+          title = 'Error';
+          subtitle = response['error'];
+        }
+      } catch (e) {
+        print('Error: $e');
+        type = RichAlertType.ERROR;
+        title = 'Error';
+        subtitle = _isIos ? e.details : e.message;
+      }
+      setState(() {
+        _isLoading = false;
+      });
+      showDialog(
+        context: _context,
+        builder: (BuildContext context) {
+          return RichAlertDialog(
+            alertTitle: richTitle(title),
+            alertSubtitle: richSubtitle(subtitle),
+            alertType: type,
+            actions: <Widget>[
+              FlatButton(
+                child: Text("OK"),
+                onPressed: (){Navigator.pop(context);},
+              ),
+            ],
+          );
+        }
+      );
+    }
+  }
+
   Widget _showForm() {
     List<Widget> children = routes.isEmpty ? 
       [emptyContainer] : _showBody();
     return new Form(
-      key: _formkey,
+      key: _formKey,
       autovalidate: true,
       child: new ListView(
         shrinkWrap: true,
@@ -57,9 +122,13 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   Widget _showCircularProgress(){
-    if (anyDropdownEmpty()) {
+    if (anyDropdownEmpty() || _isLoading) {
       return Center(child: CircularProgressIndicator());
     } return emptyContainer;
+  }
+
+  bool anyDropdownEmpty() {
+    return routes.isEmpty || busesAndSeats.isEmpty || stops.isEmpty;
   }
 
   List<Widget> _showBody() {
@@ -83,7 +152,8 @@ class _ReservationPageState extends State<ReservationPage> {
       new SubmitButton(
         label: 'Reservar',
         function: _validateAndSubmit,
-      )
+      ),
+      _showErrorMessage()
     ];
   }
 
@@ -95,6 +165,21 @@ class _ReservationPageState extends State<ReservationPage> {
       icon: Icon(Icons.map),
       updateState: updateRoute
     );
+  }
+
+  Widget _showErrorMessage() {
+    if (_errorMessage != null && _errorMessage.length > 0) {
+      return new Text(
+        _errorMessage,
+        style: TextStyle(
+          fontSize: 13.0,
+          color: Colors.red,
+          height: 1.0,
+          fontWeight: FontWeight.w300
+        ),
+      );
+    }
+    return emptyContainer;
   }
 
   void updateRoute(int newId, FormFieldState<int> state) {
@@ -121,12 +206,6 @@ class _ReservationPageState extends State<ReservationPage> {
       state.didChange(newId);
     });
   }
-
-  bool anyDropdownEmpty() {
-    return routes.isEmpty || busesAndSeats.isEmpty || stops.isEmpty;
-  }
-
-  void _validateAndSubmit() async {}
 
   Future _chooseDate(BuildContext context, String initialDateString) async {
     DateTime now = new DateTime.now();
@@ -157,7 +236,6 @@ class _ReservationPageState extends State<ReservationPage> {
           child: new TextFormField(
             decoration: new InputDecoration(
               icon: const Icon(Icons.calendar_today),
-              hintText: '¿Para cuál día es la reserva?',
               labelText: 'Fecha',
             ),
             controller: _controller,

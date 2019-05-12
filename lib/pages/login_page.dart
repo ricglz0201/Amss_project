@@ -58,10 +58,7 @@ class _LoginPageState extends State<LoginPage> {
         print('Error: $e');
         setState(() {
           _isLoading = false;
-          if (_isIos) {
-            _errorMessage = e.details;
-          } else
-            _errorMessage = e.message;
+          _errorMessage = _isIos ? e.details : e.message;
         });
       }
     }
