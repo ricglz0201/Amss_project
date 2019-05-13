@@ -7,62 +7,54 @@ class ProfilePage extends StatelessWidget {
   ProfilePage(this.user);
 
   @override
-  Widget build(BuildContext context) {
-    return new Container(
-      padding: EdgeInsets.all(16.0),
-      child: new ListView(
-        shrinkWrap: true,
-        children: <Widget>[
-          _showLogo(),
-          Text(
-            user.mail,
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
-          _showBody()
-        ],
-      )
-    );
-  }
-
-  Widget _showLogo() {
-    return new Hero(
-      tag: 'hero',
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
-        child: CircleAvatar(
-          backgroundColor: Colors.blueGrey,
-          radius: 48.0,
-          child: new Icon(Icons.person, size: 40),
+  Widget build(BuildContext context) => Container(
+    padding: EdgeInsets.all(16.0),
+    child: ListView(
+      shrinkWrap: true,
+      children: <Widget>[
+        _showLogo(),
+        Text(
+          user.mail,
+          style: TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
         ),
-      ),
-    );
-  }
+        _showBody()
+      ],
+    )
+  );
 
-  Widget _showBody() {
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0.0, 15.0, .0, .0),
-      child: new Column(
-        children: <Widget>[
-          Text(
-            'Pases',
-            style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)
-          ),
-          Padding(padding: EdgeInsets.fromLTRB(.0, .0, .0, 5)),
-          new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _showTickets(),
-          ),
-        ],
+  Widget _showLogo() => Hero(
+    tag: 'hero',
+    child: Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 30.0),
+      child: CircleAvatar(
+        backgroundColor: Colors.blueGrey,
+        radius: 48.0,
+        child: Icon(Icons.person, size: 40),
       ),
-    );
-  }
+    ),
+  );
 
-  List<Widget> _showTickets() {
-    return <Widget>[
-      Icon(Icons.payment),
-      Icon(Icons.payment),
-      Icon(Icons.payment),
-    ];
-  }
+  Widget _showBody() => Container(
+    padding: EdgeInsets.fromLTRB(0.0, 15.0, .0, .0),
+    child: Column(
+      children: <Widget>[
+        Text(
+          'Pases',
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)
+        ),
+        Padding(padding: EdgeInsets.fromLTRB(.0, .0, .0, 5)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _showTickets(),
+        ),
+      ],
+    ),
+  );
+
+  List<Widget> _showTickets() => <Widget>[
+    Icon(Icons.payment),
+    Icon(Icons.payment),
+    Icon(Icons.payment),
+  ];
 }

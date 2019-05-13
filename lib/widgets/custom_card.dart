@@ -8,9 +8,9 @@ class CustomCard extends StatelessWidget{
   CustomCard({this.label, this.color, this.icon});
 
   @override
-  Widget build(BuildContext context) => new Card(
+  Widget build(BuildContext context) => Card(
     elevation: 8.0,
-    margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+    margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
     child: Container(
       decoration: BoxDecoration(color: color),
       child: makeListTile(),
@@ -21,9 +21,9 @@ class CustomCard extends StatelessWidget{
     contentPadding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
     leading: Container(
       padding: EdgeInsets.only(right: 12.0),
-      decoration: new BoxDecoration(
-        border: new Border(
-          right: new BorderSide(width: 1.0, color: Colors.white24)
+      decoration: BoxDecoration(
+        border: Border(
+          right: BorderSide(width: 1.0, color: Colors.white24)
         )
       ),
       child: icon,

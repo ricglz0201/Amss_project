@@ -8,17 +8,19 @@ class SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Padding(
+    return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
       child: SizedBox(
         height: 40.0,
-        child: new RaisedButton(
+        child: RaisedButton(
           elevation: 5.0,
-          shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0)
+          ),
           color: Colors.blue,
-          child:new Text(
+          child: Text(
             label,
-            style: new TextStyle(fontSize: 20.0, color: Colors.white)
+            style: TextStyle(fontSize: 20.0, color: Colors.white)
           ),
           onPressed: function,
         ),

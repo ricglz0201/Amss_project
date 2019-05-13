@@ -7,14 +7,12 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Root',
-        debugShowCheckedModeBanner: false,
-        theme: new ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: new RootPage(auth: new Auth())
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+    title: 'Root',
+    debugShowCheckedModeBanner: false,
+    theme: new ThemeData(
+      primarySwatch: Colors.blue,
+    ),
+    home: new RootPage(auth: new Auth())
+  );
 }

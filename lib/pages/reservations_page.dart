@@ -10,7 +10,7 @@ class ReservationsPage extends StatefulWidget {
   ReservationsPage(this.uuid);
 
   @override
-  State<StatefulWidget> createState() => new _ReservationsPageState();
+  State<StatefulWidget> createState() => _ReservationsPageState();
 }
 
 class _ReservationsPageState extends State<ReservationsPage>{
@@ -31,22 +31,20 @@ class _ReservationsPageState extends State<ReservationsPage>{
   }
 
   @override
-  Widget build(BuildContext context) {
-    return StackWidget(
-      body: new Container(
-        padding: EdgeInsets.all(16.0),
-        child: new ListView(
-          shrinkWrap: true,
-          children: _reservations.map((reservation) => 
-            new CustomCard(
-              color: Colors.blueGrey,
-              label: 'Reservación en la parada ${reservation.stop.name}',
-              icon: Icon(Icons.check, color: Colors.white),
-            )
-          ).toList(),
-        )
-      ),
-      condition: _isLoading
-    );
-  }
+  Widget build(BuildContext context) => StackWidget(
+    body: Container(
+      padding: EdgeInsets.all(16.0),
+      child: ListView(
+        shrinkWrap: true,
+        children: _reservations.map((reservation) => 
+          CustomCard(
+            color: Colors.blueGrey,
+            label: 'Reservación en la parada ${reservation.stop.name}',
+            icon: Icon(Icons.check, color: Colors.white),
+          )
+        ).toList(),
+      )
+    ),
+    condition: _isLoading
+  );
 }

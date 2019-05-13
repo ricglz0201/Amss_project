@@ -16,21 +16,15 @@ class Reservation {
     this.date
   });
 
-  static List<Reservation> allFromResponse(List response) {
-    return response
-      .map((obj) => fromMap(obj))
-      .toList()
-      .cast<Reservation>();
-  }
+  static List<Reservation> allFromResponse(List response) =>
+    response.map((obj) => fromMap(obj)).toList().cast<Reservation>();
 
-  static Reservation fromMap(Map map) {
-    return new Reservation(
-      id: map['id'],
-      userId: map['user_id'],
-      stopId: map['stop_id'],
-      tripId: map['trip_id'],
-      bikeSeatReserved: map['bike_seat_reserved'],
-      stop: Stop.fromMap(map['stop'])
-    );
-  }
+  static Reservation fromMap(Map map) => Reservation(
+    id: map['id'],
+    userId: map['user_id'],
+    stopId: map['stop_id'],
+    tripId: map['trip_id'],
+    bikeSeatReserved: map['bike_seat_reserved'],
+    stop: Stop.fromMap(map['stop'])
+  );
 }

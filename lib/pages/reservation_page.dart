@@ -16,13 +16,13 @@ class ReservationPage extends StatefulWidget {
   ReservationPage(this.uuid);
 
   @override
-  State<StatefulWidget> createState() => new _ReservationPageState();
+  State<StatefulWidget> createState() => _ReservationPageState();
 }
 
 class _ReservationPageState extends State<ReservationPage> {
-  final _formKey = new GlobalKey<FormState>();
-  final TextEditingController _controller = new TextEditingController();
-  final Container emptyContainer = new Container(height: 0.0, width: 0.0);
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _controller = TextEditingController();
+  final Container emptyContainer = Container(height: 0.0, width: 0.0);
   
   String _errorMessage = "";
   bool _isLoading = false, _isIos;
@@ -36,9 +36,8 @@ class _ReservationPageState extends State<ReservationPage> {
     getRoutes(updateRoutes);
   }
 
-  bool anyDropdownEmpty() {
-    return routes.isEmpty || busesAndSeats.isEmpty || stops.isEmpty;
-  }
+  bool anyDropdownEmpty() =>
+    routes.isEmpty || busesAndSeats.isEmpty || stops.isEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +71,7 @@ class _ReservationPageState extends State<ReservationPage> {
   void _validateAndSubmit() async {
     if (_validateAndSave()) {
       Map<String, String> params = {
-        'date': _controller.text,
+        'date': encodedDate(),
         'user_id': '1',
         'stop_id': _stopId.toString(),
         'seat_id': _seatId.toString()
@@ -104,64 +103,61 @@ class _ReservationPageState extends State<ReservationPage> {
     }
   }
 
+  String encodedDate() =>
+    DateFormat('dd/MM/yyyy').parse(_controller.text).toIso8601String();
+
   void _showPopup(String title, String subtitle, int type) {
     showDialog(
       context: _context,
-      builder: (BuildContext context) {
-        return RichAlertDialog(
-          alertTitle: richTitle(title),
-          alertSubtitle: richSubtitle(subtitle),
-          alertType: type,
-          actions: <Widget>[
-            FlatButton(
-              child: Text("OK"),
-              onPressed: (){Navigator.pop(context);},
-            ),
-          ],
-        );
-      }
+      builder: (BuildContext context) => RichAlertDialog(
+        alertTitle: richTitle(title),
+        alertSubtitle: richSubtitle(subtitle),
+        alertType: type,
+        actions: <Widget>[
+          FlatButton(
+            child: Text("OK"),
+            onPressed: (){Navigator.pop(context);},
+          ),
+        ],
+      )
     );
   }
 
-  List<Widget> _showBody() {
-    return <Widget>[
-      _showDatePicker(),
-      _showRoutes(),
-      new DropdownWidget(
-        id: _seatId,
-        list: busesAndSeats,
-        label: 'Autobus - Asiento',
-        icon: Icon(Icons.event_seat),
-        updateState: updateSeat
-      ),
-      new DropdownWidget(
-        id: _stopId,
-        list: stops,
-        label: 'Parada',
-        icon: Icon(Icons.directions_bus),
-        updateState: updateStop
-      ),
-      new SubmitButton(
-        label: 'Reservar',
-        function: _validateAndSubmit,
-      ),
-      _showErrorMessage()
-    ];
-  }
+  List<Widget> _showBody() => <Widget>[
+    _showDatePicker(),
+    _showRoutes(),
+    DropdownWidget(
+      id: _seatId,
+      list: busesAndSeats,
+      label: 'Autobus - Asiento',
+      icon: Icon(Icons.event_seat),
+      updateState: updateSeat
+    ),
+    DropdownWidget(
+      id: _stopId,
+      list: stops,
+      label: 'Parada',
+      icon: Icon(Icons.directions_bus),
+      updateState: updateStop
+    ),
+    SubmitButton(
+      label: 'Reservar',
+      function: _validateAndSubmit,
+    ),
+    _showErrorMessage()
+  ];
 
-  Widget _showRoutes() {
-    return new DropdownWidget(
-      id: _routeId, 
-      list: routes,
-      label: 'Ruta',
-      icon: Icon(Icons.map),
-      updateState: updateRoute
-    );
-  }
+  Widget _showRoutes() => DropdownWidget(
+    id: _routeId, 
+    list: routes,
+    label: 'Ruta',
+    icon: Icon(Icons.map),
+    updateState: updateRoute
+  );
 
   Widget _showErrorMessage() {
     if (_errorMessage.length > 0) {
-      return new Text(
+      return Text(
         _errorMessage,
         style: TextStyle(
           fontSize: 13.0,
@@ -200,32 +196,24 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   Future _chooseDate(BuildContext context, String initialDateString) async {
-    DateTime now = new DateTime.now();
+    DateTime now = DateTime.now();
     var result = await showDatePicker(
       context: context,
       initialDate: now,
       firstDate: now,
-      lastDate: new DateTime(now.year+1)
+      lastDate: DateTime(now.year+1)
     );
     if (result == null) return;
     setState(() {
-      _controller.text = new DateFormat.yMd().format(result);
+      _controller.text = DateFormat('dd/MM/yyyy').format(result);
     });
   }
 
-  DateTime convertToDate(String input) {
-    try {
-      return new DateFormat.yMd().parseStrict(input);
-    } catch (e) {
-      return null;
-    }    
-  }
-
-  Widget _showDatePicker() => new Row(
+  Widget _showDatePicker() => Row(
     children: <Widget>[
-      new Expanded(
-        child: new TextFormField(
-          decoration: new InputDecoration(
+      Expanded(
+        child: TextFormField(
+          decoration: InputDecoration(
             icon: const Icon(Icons.calendar_today),
             labelText: 'Fecha',
           ),
@@ -233,7 +221,7 @@ class _ReservationPageState extends State<ReservationPage> {
           keyboardType: TextInputType.datetime,
         )
       ),
-      new IconButton(
+      IconButton(
         icon: const Icon(Icons.more_horiz),
         tooltip: 'Choose date',
         onPressed: (() {
@@ -245,7 +233,7 @@ class _ReservationPageState extends State<ReservationPage> {
 
   void updateRoutes(List<RouteModel> response) {
     List<DropdownMenuItem> newRoutes = response.map((RouteModel route) {
-      return new DropdownMenuItem(
+      return DropdownMenuItem(
         value: route.id,
         child: Text(route.name),
       );
@@ -262,7 +250,7 @@ class _ReservationPageState extends State<ReservationPage> {
     List<DropdownMenuItem<int>> newBuses = List<DropdownMenuItem<int>>();
     response.forEach((Bus bus) {
       bus.seats.forEach((Seat seat){
-        newBuses.add(new DropdownMenuItem<int>(
+        newBuses.add(DropdownMenuItem<int>(
           value: seat.id,
           child: Text('Autbus ${bus.id} - ${seat.seatNumber}'),
         ));
@@ -276,7 +264,7 @@ class _ReservationPageState extends State<ReservationPage> {
 
   void updateStops(List<Stop> response) {
     List<DropdownMenuItem> newStop = response.map((Stop stop) {
-      return new DropdownMenuItem(
+      return DropdownMenuItem(
         value: stop.id,
         child: Text(stop.name),
       );

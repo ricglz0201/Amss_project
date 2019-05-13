@@ -27,21 +27,19 @@ class _RoutesPageState extends State<RoutesPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return StackWidget(
-      body: ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: routes.length,
-        itemBuilder: (BuildContext context, int index) {
-          return new CustomCard(
-            label: 'Ruta: ${routes[index].name}',
-            color: Color(0xFF1976D2),
-            icon: Icon(Icons.map, color: Colors.white),
-          );
-        },
-      ),
-      condition: _isLoading,
-    );
-  }
+  Widget build(BuildContext context) => StackWidget(
+    body: ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: routes.length,
+      itemBuilder: (BuildContext context, int index) {
+        return new CustomCard(
+          label: 'Ruta: ${routes[index].name}',
+          color: Color(0xFF1976D2),
+          icon: Icon(Icons.map, color: Colors.white),
+        );
+      },
+    ),
+    condition: _isLoading,
+  );
 }

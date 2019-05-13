@@ -15,7 +15,7 @@ class HomePage extends StatefulWidget {
   final User user;
 
   @override
-  State<StatefulWidget> createState() => new _HomePageState();
+  State<StatefulWidget> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
@@ -26,10 +26,10 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _children = [
-      new ProfilePage(widget.user),
-      new RoutesPage(),
-      new ReservationPage(widget.user.uuid),
-      new ReservationsPage(widget.user.uuid),
+      ProfilePage(widget.user),
+      RoutesPage(),
+      ReservationPage(widget.user.uuid),
+      ReservationsPage(widget.user.uuid),
     ];
   }
 
@@ -43,45 +43,43 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: _showAppBar(),
-      body: _children[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: onTap,
-        type: BottomNavigationBarType.fixed,
-        items: _showBarItems(),
-      ),
-    );
-  }
+  build(BuildContext context) => Scaffold(
+    appBar: _showAppBar(),
+    body: _children[_currentIndex],
+    bottomNavigationBar: BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: onTap,
+      type: BottomNavigationBarType.fixed,
+      items: _showBarItems(),
+    ),
+  );
 
   Widget _showAppBar() => AppBar(
-    title: new Text('El borrego volador'),
+    title: Text('El borrego volador'),
     actions: <Widget>[
-      new FlatButton(
-        child: new Icon(Icons.exit_to_app, color: Colors.white70),
+      FlatButton(
+        child: Icon(Icons.exit_to_app, color: Colors.white70),
         onPressed: _signOut
       )
     ],
   );
 
   List<BottomNavigationBarItem> _showBarItems() => [
-    new BottomNavigationBarItem(
-      icon: new Icon(Icons.person),
-      title: new Text('Perfil', style: TextStyle(fontSize: 11)),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.person),
+      title: Text('Perfil', style: TextStyle(fontSize: 11)),
     ),
-    new BottomNavigationBarItem(
-      icon: new Icon(Icons.directions_bus),
-      title: new Text('Rutas', style: TextStyle(fontSize: 11)),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.directions_bus),
+      title: Text('Rutas', style: TextStyle(fontSize: 11)),
     ),
-    new BottomNavigationBarItem(
-      icon: new Icon(Icons.assignment),
-      title: new Text('Reservar', style: TextStyle(fontSize: 11)),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.assignment),
+      title: Text('Reservar', style: TextStyle(fontSize: 11)),
     ),
-    new BottomNavigationBarItem(
-      icon: new Icon(Icons.book),
-      title: new Text('Reservaciones', style: TextStyle(fontSize: 11)),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.book),
+      title: Text('Reservaciones', style: TextStyle(fontSize: 11)),
     )
   ];
 

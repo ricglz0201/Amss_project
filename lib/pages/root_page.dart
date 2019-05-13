@@ -10,7 +10,7 @@ class RootPage extends StatefulWidget {
   final BaseAuth auth;
 
   @override
-  State<StatefulWidget> createState() => new _RootPageState();
+  State<StatefulWidget> createState() => _RootPageState();
 }
 
 enum AuthStatus {
@@ -51,14 +51,14 @@ class _RootPageState extends State<RootPage> {
     });
   }
 
-  Widget _buildWaitingScreen() {
-    return Scaffold(
-      body: Container(
+  Widget _buildWaitingScreen() => Scaffold(
+    body: Center(
+      child: Container(
         alignment: Alignment.center,
         child: CircularProgressIndicator(),
-      ),
-    );
-  }
+      )
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -67,19 +67,19 @@ class _RootPageState extends State<RootPage> {
         return _buildWaitingScreen();
         break;
       case AuthStatus.NOT_LOGGED_IN:
-        return new LoginPage(
+        return LoginPage(
           auth: widget.auth,
           onSignedIn: _onLoggedIn,
         );
         break;
       case AuthStatus.LOGGED_IN:
         if (_user != null && _user.uuid.length > 0) {
-          return new HomePage(
+          return HomePage(
             user: _user,
             auth: widget.auth,
             onSignedOut: _onSignedOut,
           );
-        } else return _buildWaitingScreen();
+        } return _buildWaitingScreen();
         break;
       default:
         return _buildWaitingScreen();

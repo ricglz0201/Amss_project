@@ -1,16 +1,16 @@
 import 'dart:convert';
 
-import 'package:amss_project/models/reservation.dart';
 import 'package:http/http.dart';
 import 'package:amss_project/models/bus.dart';
+import 'package:amss_project/models/reservation.dart';
 import 'package:amss_project/models/route.dart';
 import 'package:amss_project/models/stop.dart';
 
-String url = 'https://amss-api.herokuapp.com/routes';
+String url = 'https://amss-api.herokuapp.com';
 
 void getRoutes(void Function(List<RouteModel>) doneFunction) async {
   Response response = await get('$url/routes');
-  doneFunction(RouteModel.allFromResponse(response.body));
+  doneFunction(RouteModel.allFromResponse(jsonDecode(response.body)));
 }
 
 void getBuses(void Function(List<Bus>) doneFunction, int routeId) async {

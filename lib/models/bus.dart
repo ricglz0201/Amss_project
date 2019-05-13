@@ -6,19 +6,13 @@ class Bus {
   
   Bus({this.id, this.bicyclesSlotsAvailable, this.seatsAvailable, this.seats});
 
-  static List<Bus> allFromResponse(List response) {
-    return response
-      .map((obj) => fromMap(obj))
-      .toList()
-      .cast<Bus>();
-  }
+  static List<Bus> allFromResponse(List response) => 
+    response.map((obj) => fromMap(obj)).toList().cast<Bus>();
 
-  static Bus fromMap(Map map) {
-    return new Bus(
-      id: map['id'],
-      bicyclesSlotsAvailable: map['bycicles_slots_available'],
-      seatsAvailable: map['seats_available'],
-      seats: Seat.allFromResponse(map['seats'])
-    );
-  }
+  static Bus fromMap(Map map) => Bus(
+    id: map['id'],
+    bicyclesSlotsAvailable: map['bycicles_slots_available'],
+    seatsAvailable: map['seats_available'],
+    seats: Seat.allFromResponse(map['seats'])
+  );
 }
