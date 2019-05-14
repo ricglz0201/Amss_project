@@ -39,7 +39,7 @@ class _ReservationsPageState extends State<ReservationsPage>{
         children: _reservations.map((reservation) => 
           CustomCard(
             color: Colors.blueGrey,
-            label: 'Reservación en la parada ${reservation.stop.name}',
+            label: 'Reservación para el ${reservation.date} en la parada ${reservation.stop.name}',
             icon: Icon(Icons.check, color: Colors.white),
           )
         ).toList(),

@@ -2,6 +2,7 @@ import 'package:amss_project/widgets/stack_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:amss_project/extra/auth.dart';
 import 'package:amss_project/widgets/submit_button.dart';
+import 'package:rich_alert/rich_alert.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({this.auth, this.onSignedIn});
@@ -16,11 +17,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  String _email, _password, _errorMessage = "";
+  String _email, _password;
+  BuildContext _context;
   bool _isIos, _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
     _isIos = Theme.of(context).platform == TargetPlatform.iOS;
     return Scaffold(
       appBar: AppBar( title: Text('Iniciar sesión')),
@@ -42,17 +45,13 @@ class _LoginPageState extends State<LoginPage> {
             label: 'Iniciar sesión',
             function: _validateAndSubmit,
           ),
-          _showErrorMessage()
         ],
       ),
     )
   );
 
   void _validateAndSubmit() async {
-    setState(() {
-      _errorMessage = "";
-      _isLoading = true;
-    });
+    setState(() { _isLoading = true; });
     if (_validateAndSave()) {
       String userId = "";
       try {
@@ -61,10 +60,27 @@ class _LoginPageState extends State<LoginPage> {
         print('Signed in: $userId');
       } catch (e) {
         print('Error: $e');
-        setState(() { _errorMessage = _isIos ? e.details : e.message; });
+        _showPopup(_isIos ? e.details : e.message);
       }
     }
     setState(() { _isLoading = false; });
+  }
+
+  void _showPopup(String subtitle) {
+    showDialog(
+      context: _context,
+      builder: (BuildContext context) => RichAlertDialog(
+        alertTitle: richTitle('Error'),
+        alertSubtitle: richSubtitle(subtitle),
+        alertType: RichAlertType.ERROR,
+        actions: <Widget>[
+          FlatButton(
+            child: Text("OK"),
+            onPressed: (){Navigator.pop(context);},
+          ),
+        ],
+      )
+    );
   }
 
   bool _validateAndSave() {
@@ -74,21 +90,6 @@ class _LoginPageState extends State<LoginPage> {
       return true;
     }
     return false;
-  }
-
-  Widget _showErrorMessage() {
-    if (_errorMessage.length > 0) {
-      return Text(
-        _errorMessage,
-        style: TextStyle(
-          fontSize: 13.0,
-          color: Colors.red,
-          height: 1.0,
-          fontWeight: FontWeight.w300
-        ),
-        textAlign: TextAlign.center,
-      );
-    } return Container(height: 0.0);
   }
 
   Widget _showLogo() => Hero(
@@ -116,9 +117,9 @@ class _LoginPageState extends State<LoginPage> {
   );
 
   String _mailValidator(value) {
-    if(value.isEmpty) return 'Mail can\'t be empty';
+    if(value.isEmpty) return 'El correo no puede estar vacío';
     RegExp exp = RegExp(r"[aAlL][0-9]{8}@(itesm|tec).mx");
-    return exp.hasMatch(value) ? null : 'The format isn\'t correct';
+    return exp.hasMatch(value) ? null : 'El formato no es el correcto';
   }
 
   Widget _showPasswordInput() => Padding(
@@ -133,7 +134,8 @@ class _LoginPageState extends State<LoginPage> {
             Icons.lock,
             color: Colors.grey,
           )),
-      validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+      validator: (value)
+        => value.isEmpty ? 'La contraseña no puede estar vacía' : null,
       onSaved: (value) => _password = value,
     ),
   );

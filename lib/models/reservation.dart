@@ -1,4 +1,5 @@
 import 'package:amss_project/models/stop.dart';
+import 'package:intl/intl.dart';
 
 class Reservation {
   int userId, stopId, tripId, id;
@@ -25,6 +26,8 @@ class Reservation {
     stopId: map['stop_id'],
     tripId: map['trip_id'],
     bikeSeatReserved: map['bike_seat_reserved'],
-    stop: Stop.fromMap(map['stop'])
+    stop: Stop.fromMap(map['stop']),
+    date: DateFormat('EEEE dd/MM/yyyy').
+            format(DateTime.parse(map['trip']['date'])),
   );
 }

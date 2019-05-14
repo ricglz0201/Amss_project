@@ -127,18 +127,18 @@ class _ReservationPageState extends State<ReservationPage> {
     _showDatePicker(),
     _showRoutes(),
     DropdownWidget(
-      id: _seatId,
-      list: busesAndSeats,
-      label: 'Autobus - Asiento',
-      icon: Icon(Icons.event_seat),
-      updateState: updateSeat
-    ),
-    DropdownWidget(
       id: _stopId,
       list: stops,
       label: 'Parada',
       icon: Icon(Icons.directions_bus),
       updateState: updateStop
+    ),
+    DropdownWidget(
+      id: _seatId,
+      list: busesAndSeats,
+      label: 'Autobus - Asiento',
+      icon: Icon(Icons.event_seat),
+      updateState: updateSeat
     ),
     SubmitButton(
       label: 'Reservar',
@@ -146,6 +146,30 @@ class _ReservationPageState extends State<ReservationPage> {
     ),
     _showErrorMessage()
   ];
+
+  Widget _showDatePicker() => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: <Widget>[
+      Expanded(
+        child: TextFormField(
+          decoration: InputDecoration(
+            icon: const Icon(Icons.calendar_today),
+            labelText: 'Fecha',
+            hintText: 'dd/mm/yyyy'
+          ),
+          controller: _controller,
+          keyboardType: TextInputType.datetime,
+        )
+      ),
+      IconButton(
+        icon: const Icon(Icons.more_horiz),
+        tooltip: 'Choose date',
+        onPressed: (() {
+          _chooseDate(context, _controller.text);
+        }),
+      )
+    ]
+  );
 
   Widget _showRoutes() => DropdownWidget(
     id: _routeId, 
@@ -201,35 +225,13 @@ class _ReservationPageState extends State<ReservationPage> {
       context: context,
       initialDate: now,
       firstDate: now,
-      lastDate: DateTime(now.year+1)
+      lastDate: DateTime(now.year+1, now.month, now.day-1)
     );
     if (result == null) return;
     setState(() {
       _controller.text = DateFormat('dd/MM/yyyy').format(result);
     });
   }
-
-  Widget _showDatePicker() => Row(
-    children: <Widget>[
-      Expanded(
-        child: TextFormField(
-          decoration: InputDecoration(
-            icon: const Icon(Icons.calendar_today),
-            labelText: 'Fecha',
-          ),
-          controller: _controller,
-          keyboardType: TextInputType.datetime,
-        )
-      ),
-      IconButton(
-        icon: const Icon(Icons.more_horiz),
-        tooltip: 'Choose date',
-        onPressed: (() {
-          _chooseDate(context, _controller.text);
-        }),
-      )
-    ]
-  );
 
   void updateRoutes(List<RouteModel> response) {
     List<DropdownMenuItem> newRoutes = response.map((RouteModel route) {
